@@ -29,7 +29,7 @@ Then open this in your browser to see and test it interactively:
 # 1. IMPORTS
 # ----------------------------------------------------------------------
 from fastapi import FastAPI, HTTPException, status
-# ^ FastAPI: turns our Python functions into a real web API.
+#  FastAPI: turns our Python functions into a real web API.
 #   HTTPException: lets us send back a clear error message when something goes wrong.
 #   status: gives us readable names for web response codes, like status.HTTP_400_BAD_REQUEST.
 
@@ -49,7 +49,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score  #
 # 2. APP SETUP & CONSTANTS
 # ----------------------------------------------------------------------
 app = FastAPI(
-    title="Nigerian Traffic Crashes - Prediction API",
+    title="Nigerian Road Traffic Crashes - Prediction API",
     description="Train Linear Regression and Random Forest models on Nigerian road "
                 "crash data, then predict Total_Crashes with either one.",
     version="1.0.0",
@@ -58,7 +58,7 @@ app = FastAPI(
 DATA_FILE = "Nigerian_Road_Traffic_Crashes_2020_2024.csv"   # where the raw data lives
 
 FEATURE_NAMES = ["State", "Year", "Quarter_Num", "SPV", "DAD", "PWR", "FTQ", "Other_Factors"]
-# ^ the columns the models use as clues
+#  the columns the models use as clues
 
 TARGET_NAME = "Total_Crashes"   # the column we're trying to predict
 
@@ -275,13 +275,13 @@ async def train(config: TrainingConfig):
     forest_scores = score_model(forest_model, X_test, y_test)
 
     # ---- Automatically decide the winner (smaller RMSE = better) -----------
-    winner_name = "Linear Regression" if linear_scores["rmse"] <= forest_scores["rmse"] else "Random Forest"
+    best_model = "Linear Regression" if linear_scores["rmse"] <= forest_scores["rmse"] else "Random Forest"
 
     # ---- Save everything into memory, ready for /predict calls -------------
     model_store["linear_model"] = linear_model
     model_store["forest_model"] = forest_model
     model_store["state_encoder"] = state_encoder
-    model_store["winner_model_name"] = winner_name
+    model_store["winner_model_name"] = best_model
 
     return {
         "status": "success",
@@ -292,7 +292,7 @@ async def train(config: TrainingConfig):
             "Linear Regression": linear_scores,
             "Random Forest": forest_scores,
         },
-        "automatically_chosen_winner": winner_name,
+        "automatically_chosen_winner": best_model,
     }
 
 
